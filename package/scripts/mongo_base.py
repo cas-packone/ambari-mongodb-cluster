@@ -4,7 +4,6 @@ from resource_management import *
 import ambari_simplejson as json # simplejson is much faster comparing to Python 2.6 json module and has the same functions set.
 
 class MongoBase(Script):
-    repos_file_path = '/etc/yum.repos.d/mongodb.repo'
     db_file_path = '/etc/mongod.conf'
     config_file_path='/etc/mongod-config.conf'
     mongo_packages = None
@@ -16,14 +15,6 @@ class MongoBase(Script):
 
         self.install_packages(env)
 
-        if os.path.exists(self.repos_file_path):
-            print "File exists"
-        else:
-            print "File not exists"
-            File(self.repos_file_path,
-                 content=Template("mongodb.repo"),
-                mode=0644
-                )
         print "Installing mongodb..."
         if self.mongo_packages is not None and len(self.mongo_packages):
             for pack in self.mongo_packages:
