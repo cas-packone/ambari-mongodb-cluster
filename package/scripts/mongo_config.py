@@ -27,7 +27,7 @@ class MongoMaster(MongoBase):
         pid_config_file=self.PID_CONFIG_FILE        
         cmd =format('cat {pid_config_file} | xargs kill -9 ')
         try:
-            Execute(cmd,logoutput=True)
+            Execute(cmd,logoutput=True, ignore_failures=True)
         except:
             print 'can not find pid process,skip this'              
 
