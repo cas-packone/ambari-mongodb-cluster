@@ -145,16 +145,9 @@ class MongoMaster(MongoBase):
 
     def stop(self, env):
         print "stop services.."
-        import params                
-        db_ports = params.db_ports       
-        for index_p,p in enumerate(db_ports,start=0):                   
-            shard_name = params.shard_prefix + str(index_p)                         
-            pid_file = params.pid_db_path + '/' + shard_name + '.pid'                  
-            cmd =format('cat {pid_file} | xargs kill -9 ')
-            try:
-               Execute(cmd,logoutput=True, ignore_failures=True)
-            except:
-               print 'can not find pid process,skip this'
+        import params                     
+        cmd = format('ps -ef|grep mongod.conf |grep -v grep|cut -c 9-15|xargs kill -9 ')
+        Execute(cmd,logoutput=True, ignore_failures=True)
         #stop arbiter       
         shard_name = params.shard_prefix + '_arbiter'                         
         pid_file = params.pid_db_path + '/' + shard_name + '.pid'                  
