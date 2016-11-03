@@ -105,4 +105,27 @@ sharding:
     </value>
     <description>This is the jinja template for mongod-config.conf file</description>
   </property>
+      <property>
+        <name>mongodb_user</name>
+        <value>mongodb</value>
+        <property-type>USER</property-type>
+        <description>User mongodb runs as</description>
+    </property>
+
+    <property>
+        <name>user_group</name>
+        <value>mongodb</value>
+        <property-type>GROUP</property-type>
+        <description>user group</description>
+    </property>
+	<property>
+		<name>auth</name>
+		<value>false</value>
+		<description>
+		  mongodb auth enabled
+		</description>
+		<value-attributes>
+		  <type>boolean</type>
+		</value-attributes>
+  </property>
 </configuration>

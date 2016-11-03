@@ -14,10 +14,17 @@ class MongoMaster(MongoBase):
         
 
     def start(self, env):
+        import params
         sleep(3)
         #waiting for mongod start
-        
-        import params
+        auth_pattern = ''
+        if params.auth :
+            print 'add keyFile'
+		    # add keyfile
+            keyfile_path = '/etc/security/'
+            keyfile_name = keyfile_path + 'mongodb-keyfile'
+            auth_pattern = ' --keyFile ' + keyfile_name        
+
         self.configure(env)
         #print "start mongodb"
         Execute('rm -rf /tmp/mongodb-30000.sock',logoutput=True)
@@ -29,7 +36,7 @@ class MongoMaster(MongoBase):
         hosts = hosts[:-1]
         pid_file = self.PID_FILE
         port = params.mongos_tcp_port
-        cmd = format('mongos -configdb {hosts} -port {port} -logpath  /var/log/mongodb/mongos.log & echo $! > {pid_file} ')
+        cmd = format('mongos -configdb {hosts} -port {port} -logpath  /var/log/mongodb/mongos.log  {auth_pattern} & echo $! > {pid_file} ')
         Execute(cmd,logoutput=True)        
         len_port=len(params.db_ports)
                 

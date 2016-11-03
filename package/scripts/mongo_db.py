@@ -29,6 +29,19 @@ class MongoMaster(MongoBase):
         shard_prefix = params.shard_prefix
         
         db_hosts = config['clusterHostInfo']['mongodb_hosts']
+		
+        auth_pattern = ''
+        if params.auth :
+            print 'add keyFile'
+		    # add keyfile
+            keyfile_path = '/etc/security/'
+            keyfile_name = keyfile_path + 'mongodb-keyfile'
+            auth_pattern = ' --keyFile ' + keyfile_name
+            if  current_host_name == db_hosts[0] :
+                Execute(format('openssl rand -base64 741 > {keyfile_name}'),logoutput=True)
+                Execute(format('chmod 600 {keyfile_name}'),logoutput=True)
+                for index,item in enumerate(db_hosts,start=1):
+                    Execute(format('scp {keyfile_name} root@{item}:{keyfile_path}'),logoutput=True)
                                  
         len_host=len(db_hosts)
         len_port=len(params.db_ports)
@@ -54,7 +67,7 @@ class MongoMaster(MongoBase):
                        Execute(format('mkdir -p {db_path}'),logoutput=True)
                    log_file = params.log_path + '/' + shard_name + '.log'
                    pid_file = params.pid_db_path + '/' + pid_file_name + '.pid'
-                   Execute(format('mongod -f /etc/mongod.conf --shardsvr  -replSet {shard_name} -port {p} -dbpath {db_path} -oplogSize 100 -logpath {log_file} -pidfilepath {pid_file}')
+                   Execute(format('mongod -f /etc/mongod.conf --shardsvr  -replSet {shard_name} -port {p} -dbpath {db_path} -oplogSize 100 -logpath {log_file} -pidfilepath {pid_file} {auth_pattern} ')
                            ,logoutput=True)
                 #start shard arbiter
                 arbiter_port = params.arbiter_port
@@ -69,7 +82,7 @@ class MongoMaster(MongoBase):
                     Execute(format('mkdir -p {db_path}'),logoutput=True)
                 log_file = params.log_path + '/arbiter.log'
                 pid_file = params.pid_db_path + '/' + pid_file_name + '.pid'
-                Execute(format('mongod -f /etc/mongod.conf --shardsvr  -replSet {shard_name} -port {arbiter_port} -dbpath {db_path} -oplogSize 100 -logpath {log_file} -pidfilepath {pid_file}')
+                Execute(format('mongod -f /etc/mongod.conf --shardsvr  -replSet {shard_name} -port {arbiter_port} -dbpath {db_path} -oplogSize 100 -logpath {log_file} -pidfilepath {pid_file} {auth_pattern}')
                            ,logoutput=True)
         
         sleep(5)
@@ -146,7 +159,7 @@ class MongoMaster(MongoBase):
     def stop(self, env):
         print "stop services.."
         import params                     
-        cmd = format('ps -ef|grep mongod.conf |grep -v grep|cut -c 9-15|xargs kill -9 ')
+        cmd = format('ps -ef|grep mongod.conf |grep -v grep|cut -c 9-15|xargs kill -2 ')
         Execute(cmd,logoutput=True, ignore_failures=True)
         #stop arbiter       
         shard_name = params.shard_prefix + '_arbiter'                         

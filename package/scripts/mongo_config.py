@@ -16,10 +16,18 @@ class MongoMaster(MongoBase):
         self.configureMongo(env)
 
     def start(self, env):
+        import params
         self.configure(env)
         print "start mongodb"
+        auth_pattern = ''
+        if params.auth :
+            print 'add keyFile'
+		    # add keyfile
+            keyfile_path = '/etc/security/'
+            keyfile_name = keyfile_path + 'mongodb-keyfile'
+            auth_pattern = ' --keyFile ' + keyfile_name
         Execute('rm -rf /tmp/mongodb-20000.sock',logoutput=True,try_sleep=3,tries=5)
-        Execute('mongod -f /etc/mongod-config.conf',logoutput=True,try_sleep=3,tries=5)
+        Execute(format('mongod -f /etc/mongod-config.conf {auth_pattern}'),logoutput=True,try_sleep=3,tries=5)
                 
 
     def stop(self, env):
