@@ -79,13 +79,11 @@ class MongoMaster(MongoBase):
 
     def stop(self, env):
         #no need stop
-        print("stop")
-        pid_file = self.PID_FILE
-        cmd =format('cat {pid_file} | xargs kill -9 ')
-        try:
-            Execute(cmd,logoutput=True, ignore_failures=True)
-        except:
-            print 'can not find pid process,skip this'
+        print("stop mongos")
+        import params
+        params.shutdown_port = params.mongos_tcp_port
+        env.set_params(params)
+        self.shutDown(env)
 
     def restart(self, env):
         #no need restart

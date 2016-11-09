@@ -118,7 +118,7 @@ sharding:
         <property-type>GROUP</property-type>
         <description>user group</description>
     </property>
-	<property>
+	<!--<property>
 		<name>auth</name>
 		<value>false</value>
 		<description>
@@ -127,5 +127,5 @@ sharding:
 		<value-attributes>
 		  <type>boolean</type>
 		</value-attributes>
-  </property>
+    </property>-->
 </configuration>

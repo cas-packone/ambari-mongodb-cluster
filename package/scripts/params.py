@@ -1,4 +1,5 @@
 from resource_management import *
+import os
 
 bind_ip = default('configurations/mongodb/bind_ip', '0.0.0.0')
 tcp_port = default('configurations/mongodb/tcp_port', '27017')
@@ -19,4 +20,4 @@ mongod_config_content = default('configurations/mongodb/mongod_config_content', 
 auth = default('configurations/mongodb/auth', 'false')
 #auth_pattern= ' --auth ' if auth else ''
 auth_pattern = ''
-
+service_packagedir = os.path.realpath(__file__).split('/scripts')[0]

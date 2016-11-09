@@ -32,12 +32,10 @@ class MongoMaster(MongoBase):
 
     def stop(self, env):
         print "stop services.."
-        pid_config_file=self.PID_CONFIG_FILE        
-        cmd =format('cat {pid_config_file} | xargs kill -9 ')
-        try:
-            Execute(cmd,logoutput=True, ignore_failures=True)
-        except:
-            print 'can not find pid process,skip this'              
+        import params
+        params.shutdown_port = '20000'
+        env.set_params(params)
+        self.shutDown(env)            
 
     def restart(self, env):
         self.configure(env)

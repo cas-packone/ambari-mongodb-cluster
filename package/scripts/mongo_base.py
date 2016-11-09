@@ -52,3 +52,8 @@ class MongoBase(Script):
                 db=params.db_name,
                 user=params.db_user,
                 json=json.dumps(user_json)))
+    def shutDown(self,env):
+        import params
+        Execute('find '+params.service_packagedir+' -iname "*.sh" | xargs chmod +x')
+        cmd = format("{service_packagedir}/scripts/shutdown.sh {shutdown_port}")
+        Execute(cmd,logoutput=True, ignore_failures=True)
