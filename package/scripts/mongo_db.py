@@ -31,6 +31,7 @@ class MongoMaster(MongoBase):
         db_hosts = config['clusterHostInfo']['mongodb_hosts']
 		
         auth_pattern = ''
+        print params.auth
         if params.auth :
             print 'add keyFile'
 		    # add keyfile
