@@ -51,6 +51,42 @@
             <timeout>600</timeout>
           </commandScript>
         </component>
+          <!--MMS-->
+          <component>
+              <name>OPS_SERVER</name>
+             <displayName>OpsServer</displayName>
+             <category>SLAVE</category>
+             <cardinality>1</cardinality>
+              <versionAdvertised>true</versionAdvertised>
+              <reassignAllowed>true</reassignAllowed>
+              <auto-deploy>
+                <enabled>true</enabled>
+                <co-locate>MONGODB/MONGODB</co-locate>
+              </auto-deploy>
+             <commandScript>
+                 <script>scripts/mms_server.py</script>
+                 <scriptType>PYTHON</scriptType>
+                 <timeout>600</timeout>
+             </commandScript>
+         </component>
+         <component>
+              <name>OPS_SERVER_AGENT</name>
+             <displayName>OpsServerAgent</displayName>
+             <category>SLAVE</category>
+             <cardinality>1+</cardinality>
+             <versionAdvertised>true</versionAdvertised>
+             <reassignAllowed>true</reassignAllowed>
+             <auto-deploy>
+                <enabled>true</enabled>
+                <co-locate>MONGODB/MONGODB</co-locate>
+              </auto-deploy>
+             <commandScript>
+                 <script>scripts/mms_agent.py</script>
+                 <scriptType>PYTHON</scriptType>
+                 <timeout>600</timeout>
+             </commandScript>
+         </component>
+
       </components>
 
       <osSpecifics>
@@ -63,10 +99,19 @@
           </packages>
         </osSpecific>
       </osSpecifics>
+      <quickLinksConfigurations>
+          <quickLinksConfiguration>
+              <fileName>quicklinks.json</fileName>
+              <default>true</default>
+          </quickLinksConfiguration>
+      </quickLinksConfigurations>
 
       <configuration-dependencies>
-        <config-type>mongodb</config-type>
+          <config-type>mongodb</config-type>
+          <config-type>mmsagent</config-type>
+          <config-type>mmsserver</config-type>
       </configuration-dependencies>
+
     </service>
   </services>
 </metainfo>
