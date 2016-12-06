@@ -6,18 +6,13 @@ from subprocess import call
 from resource_management import *
 
 class MMSServer(Script):
-
+    mongo_packages = ['mongodb-mms']
+	
     def install(self,env):
-        import params
 
-        try:
-            Execute('echo "MMS Server Istall beging" ')
-            Execute('yes | yum install mongodb-mms')
-            sleep(5)
-            self.configure(env)
-        except Exception, e:
-            print Exception, ":", e
-            Execute('echo "MMS Server Install error" ')
+        import params
+        env.set_params(params)
+        self.installMongo(env)
 
 
 
@@ -43,7 +38,7 @@ class MMSServer(Script):
 
     def restart(self, env):
        self.stop(env)
-       self.configure()
+       self.configure(env)
        self.start(env)
 
     def status(self,env):

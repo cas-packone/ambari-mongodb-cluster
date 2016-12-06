@@ -46,9 +46,9 @@ class MongoMaster(MongoBase):
                                  
         len_host=len(db_hosts)
         len_port=len(params.db_ports)
-        print "hostname :" + current_host_name
-        print "db nodes list"
-        print db_hosts
+        #print "hostname :" + current_host_name
+        #print "db nodes list"
+        #print db_hosts
         #start shard service
         for index,item in enumerate(db_hosts,start=0):
             if item ==current_host_name:
@@ -58,7 +58,7 @@ class MongoMaster(MongoBase):
                    Execute(format('rm -rf /tmp/mongodb-{p}.sock'),logoutput=True)
                    #get shard_name
                    shard_name = shard_prefix + str((index-index_p)%len_host)
-                   pid_file_name = params.shard_prefix + str(index_p)                  
+                   pid_file_name = params.shard_prefix + str((index-index_p)%len_host)      
                    #get db_path                   
                    db_path = params.db_path + '/' + shard_name
                    
@@ -70,21 +70,7 @@ class MongoMaster(MongoBase):
                    pid_file = params.pid_db_path + '/' + pid_file_name + '.pid'
                    Execute(format('mongod -f /etc/mongod.conf --shardsvr  -replSet {shard_name} -port {p} -dbpath {db_path} -oplogSize 100 -logpath {log_file} -pidfilepath {pid_file} {auth_pattern} ')
                            ,logoutput=True)
-                #start shard arbiter
-                #arbiter_port = params.arbiter_port
-                #Execute(format('rm -rf /tmp/mongodb-{arbiter_port}.sock'),logoutput=True)
-                #shard_name = shard_prefix + str(index%len_host)
-                #pid_file_name = params.shard_prefix + '_arbiter'                                   
-                #db_path = params.db_path + '/arbiter' 
-                   
-                #if os.path.exists(db_path):
-                #    print "File exists"
-                #else:
-                #    Execute(format('mkdir -p {db_path}'),logoutput=True)
-                #log_file = params.log_path + '/arbiter.log'
-                #pid_file = params.pid_db_path + '/' + pid_file_name + '.pid'
-                #Execute(format('mongod -f /etc/mongod.conf --shardsvr  -replSet {shard_name} -port {arbiter_port} -dbpath {db_path} -oplogSize 100 -logpath {log_file} -pidfilepath {pid_file} {auth_pattern}')
-                #           ,logoutput=True)
+
         
         sleep(5)
         print 'sleep waiting for all mongod started'
@@ -105,11 +91,7 @@ class MongoMaster(MongoBase):
                     members = members +',priority:2'
                 members = members + '},'
                 current_index = current_index + 1
-                current_shard = (current_shard + 1)%len(db_hosts)
-            #add arbiter   
-            #current_port = params.arbiter_port              
-            #members= members + '{_id:'+format('{current_index},host:"{current_host_name}:{current_port}"') + ',arbiterOnly: true},'
-            #members=members[:-1]            
+                current_shard = (current_shard + 1)%len(db_hosts)         
             
             replica_param ='rs.initiate( {_id:'+format('"{shard_name}",version: 1,members:') + '[' + members + ']})'
         
@@ -138,11 +120,7 @@ class MongoMaster(MongoBase):
                     members = members +',priority:2'
                 members = members + '},'
                 current_index = current_index + 1
-                current_shard = (current_shard + 1)%len(db_hosts)
-            #add arbiter   
-            #current_port = params.arbiter_port              
-            #members= members + '{_id:'+format('{current_index},host:"{current_host_name}:{current_port}"') + ',arbiterOnly: true},'
-            #members=members[:-1]            
+                current_shard = (current_shard + 1)%len(db_hosts)     
             
             if len(groups) > 1 and current_host_name in groups[1]:            
                 replica_param ='rs.initiate( {_id:'+format('"{shard_name}",version: 1,members:') + '[' + members + ']})'
@@ -160,41 +138,25 @@ class MongoMaster(MongoBase):
     def stop(self, env):
         print "stop services.."
         import params                     
-        #cmd = format('ps -ef|grep mongod.conf |grep -v grep|cut -c 9-15|xargs kill -2 ')
-        #Execute(cmd,logoutput=True, ignore_failures=True)
-        #stop arbiter       
-        #shard_name = params.shard_prefix + '_arbiter'                         
-        #pid_file = params.pid_db_path + '/' + shard_name + '.pid'                  
-        #cmd =format('cat {pid_file} | xargs kill -9 ')
-        #try:
-        #    Execute(cmd,logoutput=True, ignore_failures=True)
-        #except:
-        #    print 'can not find pid process,skip this'
         for port in params.db_ports:
             params.shutdown_port = port
             env.set_params(params)
-            self.shutDown(env)
-		#shutDown arbiter
-        #params.shutdown_port = port
-        #env.set_params(params)
-        #self.shutDown(env)			
+            self.shutDown(env)	
 
     def restart(self, env):
         self.configure(env)
         print "restart mongodb"
-        #Execute('service mongod restart')
-        #self.status(env)
         self.stop(env)
         self.start(env)
 
     def status(self, env):
         print "checking status..."
         
-        import params                    
-        db_ports = params.db_ports     
-        for index_p,p in enumerate(db_ports,start=0):                   
-            shard_name = params.shard_prefix + str(index_p)                         
-            pid_file = params.pid_db_path + '/' + shard_name + '.pid'
+        #import params                    
+        db_ports = ["27017","27018","27019"]
+        for index_p in range(0,2) :               
+            shard_name = "shard" + str(index_p)                         
+            pid_file = '/var/run/mongodb' + '/' + shard_name + '.pid'
             check_process_status(pid_file)            
 
 if __name__ == "__main__":

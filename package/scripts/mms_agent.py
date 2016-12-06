@@ -6,16 +6,11 @@ from subprocess import call
 from resource_management import *
 
 class MMSAgent(Script):
-    
+    mongo_packages = ['mongodb-mms-automation-agent-manager']
     def install(self,env):
-        try:
-            Execute('echo "MMS Agent Istall beging" ')
-            Execute('yes | yum install mongodb-mms-automation-agent-manager')
-            sleep(5)
-            self.configure(env)
-        except Exception, e:
-            print Exception, ":", e
-            Execute('echo "MMS Agent  Install error" ')
+        import params
+        env.set_params(params)
+        self.installMongo(env)
 
 
     def configure(self,env):
