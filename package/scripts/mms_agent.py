@@ -4,8 +4,9 @@ from time import sleep
 import resource_management
 from subprocess import call
 from resource_management import *
+from mongo_base import MongoBase
 
-class MMSAgent(Script):
+class MMSAgent(MongoBase):
     mongo_packages = ['mongodb-mms-automation-agent-manager']
     def install(self,env):
         import params

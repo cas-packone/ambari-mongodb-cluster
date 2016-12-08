@@ -4,8 +4,9 @@ from time import sleep
 import resource_management
 from subprocess import call
 from resource_management import *
+from mongo_base import MongoBase
 
-class MMSServer(Script):
+class MMSServer(MongoBase):
     mongo_packages = ['mongodb-mms']
 	
     def install(self,env):

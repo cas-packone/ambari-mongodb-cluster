@@ -100,7 +100,7 @@ class MongoMaster(MongoBase):
                  content=cmd,
                  mode=0755
             )
-            Execute('/var/run/mongo_config.sh',logoutput=True)
+            Execute('su - mongodb /var/run/mongo_config.sh',logoutput=True)
         else:
             
             groups = params.node_group.split(';')

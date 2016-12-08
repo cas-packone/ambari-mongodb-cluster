@@ -22,8 +22,8 @@
 <configuration>
   <property ><!--require-input="true"-->
     <name>BASE_PORT</name>
-    <value>8080</value>
-    <description>默认8080端口,如果你部署的主机8080端口已经被占用,请填写</description>
+    <value>8085</value>
+    <description>mms http port </description>
   </property>
 
 

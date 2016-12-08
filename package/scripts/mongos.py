@@ -74,7 +74,7 @@ class MongoMaster(MongoBase):
              mode=0755
         )
         sleep(5)
-        Execute('/var/run/mongos.sh',logoutput=True,try_sleep=3,tries=5)
+        Execute('su - mongodb /var/run/mongos.sh',logoutput=True,try_sleep=3,tries=5)
 
 
     def stop(self, env):
