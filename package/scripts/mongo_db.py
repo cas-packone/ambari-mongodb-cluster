@@ -3,6 +3,7 @@ from time import sleep
 from resource_management import *
 from mongo_base import MongoBase
 from resource_management.core.logger import Logger
+from resource_management.libraries.script.script import Script
 
 class MongoMaster(MongoBase):
     mongo_packages = ['mongodb-org']
@@ -58,7 +59,9 @@ class MongoMaster(MongoBase):
                    Execute(format('rm -rf /tmp/mongodb-{p}.sock'),logoutput=True)
                    #get shard_name
                    shard_name = shard_prefix + str((index-index_p)%len_host)
-                   pid_file_name = params.shard_prefix + str((index-index_p)%len_host)      
+                   #pid_file_name = params.shard_prefix + str((index-index_p)%len_host)
+                   #pid_file_name not the same to log,easy to status				   
+                   pid_file_name = params.shard_prefix + str(index_p)				   
                    #get db_path                   
                    db_path = params.db_path + '/' + shard_name
                    
@@ -149,15 +152,12 @@ class MongoMaster(MongoBase):
         self.stop(env)
         self.start(env)
 
-    def status(self, env):
-        print "checking status..."
-        
-        #import params                    
-        db_ports = ["27017","27018","27019"]
-        for index_p in range(0,2) :               
-            shard_name = "shard" + str(index_p)                         
-            pid_file = '/var/run/mongodb' + '/' + shard_name + '.pid'
-            check_process_status(pid_file)            
+    def status(self, env):	
+        db_ports=["27017","27018","27019"]		
+        for index_p,p in enumerate(db_ports,start=0):                   
+            shard_name = params.shard_prefix + str(index_p)                         
+            pid_file = params.pid_db_path + '/' + shard_name + '.pid'
+            check_process_status(pid_file)
 
 if __name__ == "__main__":
     MongoMaster().execute()
