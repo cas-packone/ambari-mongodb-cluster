@@ -37,6 +37,12 @@ class MongoBase(Script):
             print "File exists"
         else:
             Execute(format('mkdir -p {config_path}'))
+		
+        pid_db_path = params.pid_db_path 
+        if os.path.exists(pid_db_path):
+            print "File exists"
+        else:
+            Execute(format('mkdir -p {pid_db_path}'))
 
     def createDB(self, env):
         import params

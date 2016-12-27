@@ -51,6 +51,7 @@
             <timeout>600</timeout>
           </commandScript>
         </component>
+
       </components>
 
       <osSpecifics>
@@ -63,10 +64,19 @@
           </packages>
         </osSpecific>
       </osSpecifics>
+      <quickLinksConfigurations>
+          <quickLinksConfiguration>
+              <fileName>quicklinks.json</fileName>
+              <default>true</default>
+          </quickLinksConfiguration>
+      </quickLinksConfigurations>
 
       <configuration-dependencies>
-        <config-type>mongodb</config-type>
+          <config-type>mongodb</config-type>
+          <config-type>mmsagent</config-type>
+          <config-type>mmsserver</config-type>
       </configuration-dependencies>
+
     </service>
   </services>
 </metainfo>

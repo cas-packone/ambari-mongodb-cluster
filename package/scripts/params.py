@@ -1,5 +1,8 @@
 from resource_management import *
+from resource_management.libraries.script.script import Script
 import os
+# server configurations
+config = Script.get_config()
 
 bind_ip = default('configurations/mongodb/bind_ip', '0.0.0.0')
 tcp_port = default('configurations/mongodb/tcp_port', '27017')
@@ -22,3 +25,19 @@ auth=False
 #auth_pattern= ' --auth ' if auth else ''
 auth_pattern = ''
 service_packagedir = os.path.realpath(__file__).split('/scripts')[0]
+
+#MMS Server config
+mongodb_hosts = config['clusterHostInfo']['mongodb_hosts']
+mms_configdir = '/opt/mongodb/mms/conf'
+mongoUri = 'mongodb://'
+BASE_PORT = default('configurations/mmsserver/BASE_PORT', '8080')
+for host in mongodb_hosts:
+    mongoUri += host+':27017'+','
+
+mongoUri = mongoUri[:mongoUri.rfind(",")]
+print mongoUri
+Execute('echo "MMS mongoUri:" {mongoUri} ')
+#MMS agent config
+mmsGroupId = default('configurations/mmsagent/mmsGroupId', '')
+mmsApiKey = default('configurations/mmsagent/mmsApiKey', '')
+mmsBaseUrl = default('configurations/mmsagent/mmsBaseUrl', '')

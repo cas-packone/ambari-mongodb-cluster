@@ -1,0 +1,47 @@
+
+# Log directory
+LOG_PATH="${APP_DIR}/logs"
+
+# Optionally run Ops Manager server as another user. Reminder, if changing MMS_USER,
+# make sure the ownership of the Ops Manager installation directory tree is also
+# updated to MMS_USER.
+MMS_USER=mongodb-mms
+
+# JDK location (Note JRE not sufficient for JSPs, full JDK required)
+JAVA_HOME="${APP_DIR}/jdk"
+
+# The path to the encryption key used to safeguard data
+ENC_KEY_PATH=/etc/mongodb-mms/gen.key
+
+######################################################
+# Ops Manager Website
+######################################################
+# Port defaults. If changing this default port, you must also update the port
+# of 'mms.centralUrl' in conf/conf-mms.properties.
+BASE_PORT={{BASE_PORT}}
+BASE_SSL_PORT=8443
+
+# JVM configurations
+JAVA_MMS_UI_OPTS="${JAVA_MMS_UI_OPTS} -d64 -Xss228k -Xmx4352m -Xms4352m -XX:NewSize=600m -Xmn1500m -XX:ReservedCodeCacheSize=128m -XX:-OmitStackTraceInFastThrow"
+
+# Extra Application options
+JAVA_MMS_UI_OPTS="${JAVA_MMS_UI_OPTS} -Dxgen.webServerGzipEnabled=true"
+
+# JMX Options
+#JAVA_MMS_UI_OPTS="${JAVA_MMS_UI_OPTS} -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=30000 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"
+#JAVA_MMS_UI_OPTS="${JAVA_MMS_UI_OPTS} -Djava.rmi.server.hostname=[ec2-hostname-here-if-using-aws]"
+
+# Debugging options (Enable if needed)
+#JAVA_MMS_UI_OPTS="${JAVA_MMS_UI_OPTS} -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005"
+#JAVA_MMS_UI_OPTS="${JAVA_MMS_UI_OPTS} -DDEBUG.PORT=8090"
+#JAVA_DAEMON_OPTS="${JAVA_DAEMON_OPTS} -DDAEMON.DEBUG.PORT=8091"
+
+# Debugging options (GC)
+#JAVA_MMS_UI_OPTS="${JAVA_MMS_UI_OPTS} -verbose:gc -XX:+PrintGCTimeStamps -XX:+PrintGCDetails -XX:+PrintTenuringDistribution"
+
+# A command to prefix the mongod binary. Depending on your production environment it
+# may be necessary to use "numactl --interleave=all" as the value.
+# For more details, see:
+# http://docs.mongodb.org/manual/administration/production-notes/#mongodb-on-numa-hardware
+JAVA_DAEMON_OPTS="${JAVA_DAEMON_OPTS} -DMONGO.BIN.PREFIX="
+
