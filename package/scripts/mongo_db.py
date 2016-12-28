@@ -155,8 +155,8 @@ class MongoMaster(MongoBase):
     def status(self, env):	
         db_ports=["27017","27018","27019"]		
         for index_p,p in enumerate(db_ports,start=0):                   
-            shard_name = params.shard_prefix + str(index_p)                         
-            pid_file = params.pid_db_path + '/' + shard_name + '.pid'
+            shard_name = "shard" + str(index_p)                         
+            pid_file = '/var/run/mongodb' + '/' + shard_name + '.pid'
             check_process_status(pid_file)
 
 if __name__ == "__main__":
