@@ -122,10 +122,26 @@ sharding:
 		<name>auth</name>
 		<value>false</value>
 		<description>
-		  mongodb auth enabled
+		  mongodb auth enabled,before enable auth,you must start mongodb cluster successfuly once.
 		</description>
 		<value-attributes>
 		  <type>boolean</type>
+		</value-attributes>
+    </property>
+	<property>
+        <name>mongodb_admin</name>
+        <value>admin</value>
+        <description>mongodb login admin user </description>
+    </property>
+	<property require-input="true">
+		<name>mongodb_password</name>
+		<value></value>
+		<property-type>PASSWORD</property-type>
+		<display-name>Database Password</display-name>
+		<description>mongodb login admin password</description>
+		<value-attributes>
+		  <type>password</type>
+		  <overridable>false</overridable>
 		</value-attributes>
     </property>
 </configuration>

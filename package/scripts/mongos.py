@@ -15,6 +15,7 @@ class MongoMaster(MongoBase):
 
     def start(self, env):
         import params
+        env.set_params(params)
         sleep(3)
         #waiting for mongod start
         auth_pattern = ''
@@ -76,6 +77,17 @@ class MongoMaster(MongoBase):
         sleep(5)
         Execute('su - mongodb /var/run/mongos.sh',logoutput=True,try_sleep=3,tries=5)
 
+        service_packagedir = params.service_packagedir
+        register_user_path = service_packagedir + '/scripts/register_user.sh'
+        File(register_user_path,
+             content=Template("register_user.sh.j2"),
+             mode=0777
+            )
+        cmd = format("{service_packagedir}/scripts/register_user.sh")
+        Execute('echo "Running ' + cmd + '" as root')
+        Execute(cmd,logoutput=True, ignore_failures=True)
+        cmd = format("rm -rf {service_packagedir}/scripts/register_user.sh")
+        Execute(cmd,logoutput=True)
 
     def stop(self, env):
         #no need stop

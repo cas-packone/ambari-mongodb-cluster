@@ -25,6 +25,8 @@ auth = default('configurations/mongodb/auth', 'false')
 auth_pattern= ' --auth ' if auth else ''
 #auth_pattern = ''
 service_packagedir = os.path.realpath(__file__).split('/scripts')[0]
+mongodb_admin = default('configurations/mongodb/mongodb_admin', 'admin')
+mongodb_password = default('configurations/mongodb/mongodb_password', '123456')
 
 #MMS Server config
 mongodb_hosts = config['clusterHostInfo']['mongodb_hosts']
