@@ -20,10 +20,10 @@ pid_db_path = '/var/run/mongodb'
 node_group = default('configurations/mongodb/node_group', '')
 mongod_db_content = default('configurations/mongodb/mongod_db_content', '')
 mongod_config_content = default('configurations/mongodb/mongod_config_content', '')
-#auth = default('configurations/mongodb/auth', 'false')
-auth=False
-#auth_pattern= ' --auth ' if auth else ''
-auth_pattern = ''
+auth = default('configurations/mongodb/auth', 'false')
+#auth=False
+auth_pattern= ' --auth ' if auth else ''
+#auth_pattern = ''
 service_packagedir = os.path.realpath(__file__).split('/scripts')[0]
 
 #MMS Server config

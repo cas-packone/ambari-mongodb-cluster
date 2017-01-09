@@ -27,7 +27,7 @@ class MongoMaster(MongoBase):
             keyfile_name = keyfile_path + 'mongodb-keyfile'
             auth_pattern = ' --keyFile ' + keyfile_name
         Execute('rm -rf /tmp/mongodb-20000.sock',logoutput=True,try_sleep=3,tries=5)
-        Execute(format('mongod -f /etc/mongod-config.conf {auth_pattern}'),logoutput=True,try_sleep=3,tries=5)
+        Execute(format('mongod -f /etc/mongod-config.conf -port 20000 {auth_pattern}'),logoutput=True,try_sleep=3,tries=5)
                 
 
     def stop(self, env):

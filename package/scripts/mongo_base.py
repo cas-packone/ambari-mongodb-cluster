@@ -1,5 +1,5 @@
 import os
-
+from time import sleep
 from resource_management import *
 import ambari_simplejson as json # simplejson is much faster comparing to Python 2.6 json module and has the same functions set.
 
@@ -63,3 +63,4 @@ class MongoBase(Script):
         Execute('find '+params.service_packagedir+' -iname "*.sh" | xargs chmod +x')
         cmd = format("{service_packagedir}/scripts/shutdown.sh {shutdown_port}")
         Execute(cmd,logoutput=True, ignore_failures=True)
+        sleep(5)
