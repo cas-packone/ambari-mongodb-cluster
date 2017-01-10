@@ -47,9 +47,9 @@ class MongoMaster(MongoBase):
                                  
         len_host=len(db_hosts)
         len_port=len(params.db_ports)
-        #print "hostname :" + current_host_name
-        #print "db nodes list"
-        #print db_hosts
+		
+        if len(params.node_group) > 0:
+            db_hosts = self.getdbhosts(db_hosts,params.node_group)
         #start shard service
         for index,item in enumerate(db_hosts,start=0):
             if item ==current_host_name:
@@ -125,10 +125,10 @@ class MongoMaster(MongoBase):
                 current_index = current_index + 1
                 current_shard = (current_shard + 1)%len(db_hosts)     
             
-            if len(groups) > 1 and current_host_name in groups[1]:            
-                replica_param ='rs.initiate( {_id:'+format('"{shard_name}",version: 1,members:') + '[' + members + ']})'
-            else:
-                replica_param ='rs.reconfig( {_id:'+format('"{shard_name}",version: 1,members:') + '[' + members + ']},{force:1})'
+            #if len(groups) > 1 and current_host_name in groups[-1]:            
+            #    replica_param ='rs.initiate( {_id:'+format('"{shard_name}",version: 1,members:') + '[' + members + ']})'
+            #else:
+            replica_param ='rs.initiate( {_id:'+format('"{shard_name}",version: 1,members:') + '[' + members + ']},{force:1})'
         
             cmd = format('mongo --host {current_host_name} --port 27017 <<EOF \n{replica_param} \nEOF\n')
             File('/var/run/mongo_config.sh',

@@ -47,29 +47,29 @@ class MongoMaster(MongoBase):
         #Add Shards to the Cluster        
         shard_param =''
         
-        node_group = ','.join(config['clusterHostInfo']['mongodb_hosts'])
-            
-        print node_group   
-        groups = node_group.split(';')
-        for index_g,item_g in enumerate(groups,start=0):                
-            db_hosts = item_g.split(',')
-            shard_prefix = params.shard_prefix  
-            len_host=len(db_hosts)            
-            for index,item in enumerate(db_hosts,start=0):
-                current_shard=index
-                current_index=0
-                shard_nodes = ''
-                while(current_index<len_port):
-                    current_index_host=db_hosts[current_shard]
-                    current_index_port=params.db_ports[current_index]
-                    shard_nodes = shard_nodes + format('{current_index_host}:{current_index_port},')
-                    current_index = current_index + 1
-                    current_shard = (current_shard + 1)%len_host
-                shard_name= shard_prefix + str(index)
-                shard_nodes=shard_nodes[:-1]
-                basic_port = params.db_ports[0]
-                shard_param = shard_param + format('sh.addShard( \"{shard_name}/{shard_nodes}\" )\n')
-        cmd = format('mongo --host {current_host_name} --port {port} <<EOF\n  {shard_param} \nEOF\n')
+        #node_group = ','.join(config['clusterHostInfo']['mongodb_hosts'])
+             
+        #groups = node_group.split(';')
+        db_hosts = config['clusterHostInfo']['mongodb_hosts']
+        if len(params.node_group) > 0:
+            db_hosts = self.getdbhosts(db_hosts,params.node_group)
+		
+        len_host=len(db_hosts)
+        shard_prefix=params.shard_prefix		
+        for index,item in enumerate(db_hosts,start=0):
+            current_shard=index
+            current_index=0
+            shard_nodes = ''
+            while(current_index<len_port):
+                current_index_host=db_hosts[current_shard]
+                current_index_port=params.db_ports[current_index]
+                shard_nodes = shard_nodes + format('{current_index_host}:{current_index_port},')
+                current_index = current_index + 1
+                current_shard = (current_shard + 1)%len_host
+            shard_name= shard_prefix + str(index)
+            shard_nodes=shard_nodes[:-1]
+            shard_param = shard_param + "db.shards.update( { '_id' : '" + shard_name + "'},{'_id' : '" + shard_name + "','host':'" + shard_name + "/" + shard_nodes + "'},true);\n"
+        cmd = 'mongo --host ' + current_host_name + ' --port ' + port + ' <<EOF\n  use config; \n ' + shard_param + ' \nEOF\n'
         File('/var/run/mongos.sh',
              content=cmd,
              mode=0755

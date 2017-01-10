@@ -64,3 +64,20 @@ class MongoBase(Script):
         cmd = format("{service_packagedir}/scripts/shutdown.sh {shutdown_port}")
         Execute(cmd,logoutput=True, ignore_failures=True)
         sleep(5)
+
+    def getdbhosts(self,db_hosts,node_group):
+        groups = node_group.split(';')
+        new_hosts = groups[0].split(',')
+        for index,item in enumerate(db_hosts,start=0):
+            orgin_hosts = item.split(',')
+            if item not in orgin_hosts:
+                new_hosts.pop(index)
+        if len(groups) >1 :
+            for index,item in enumerate(groups,start=1):
+                if index == 1:
+                    continue
+                add_hosts = item.split(',')
+                for item in add_hosts:
+                    new_hosts.append(item)
+        print new_hosts
+        return new_hosts
