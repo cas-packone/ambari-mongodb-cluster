@@ -76,6 +76,8 @@ maybe you just add one host
 ![Image](../master/screenshots/A5_restart_all_mongodb_service.png?raw=true)
 ![Image](../master/screenshots/A6_mongodb_summary.png?raw=true)
 
+sometimes add host can not run successfully,replica set can not initial 
+see http://serverfault.com/questions/424465/how-to-reset-mongodb-replica-set-settings
 ####Rest Manage
  
 - One benefit to wrapping the component in Ambari service is that you can now monitor/manage this service remotely via REST API
