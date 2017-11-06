@@ -128,7 +128,7 @@ class MongoMaster(MongoBase):
             #if len(groups) > 1 and current_host_name in groups[-1]:            
             #    replica_param ='rs.initiate( {_id:'+format('"{shard_name}",version: 1,members:') + '[' + members + ']})'
             #else:
-            replica_param ='rs.initiate( {_id:'+format('"{shard_name}",version: 1,members:') + '[' + members + ']},{force:1})'
+            replica_param ='rs.reconfig( {_id:'+format('"{shard_name}",version: 1,members:') + '[' + members + ']},{force:1})'
         
             cmd = format('mongo --host {current_host_name} --port 27017 <<EOF \n{replica_param} \nEOF\n')
             File('/var/run/mongo_config.sh',
