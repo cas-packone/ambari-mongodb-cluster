@@ -71,7 +71,7 @@ class MongoMaster(MongoBase):
                        Execute(format('mkdir -p {db_path}'),logoutput=True)
                    log_file = params.log_path + '/' + shard_name + '.log'
                    pid_file = params.pid_db_path + '/' + pid_file_name + '.pid'
-                   Execute(format('mongod -f /etc/mongod.conf --shardsvr  -replSet {shard_name} -port {p} -dbpath {db_path} -oplogSize 100 -logpath {log_file} -pidfilepath {pid_file} {auth_pattern} ')
+                   Execute(format('mongod -f /etc/mongod.conf --shardsvr  -replSet {shard_name} -port {p} -dbpath {db_path} -oplogSize 100 -logpath {log_file} -pidfilepath {pid_file} {auth_pattern}; sleep 5 ')
                            ,logoutput=True)
 
         
